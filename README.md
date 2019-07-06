@@ -1,4 +1,5 @@
 # iv: Terminal Image Viewer for iTerm2
+[![PyPI version](https://badge.fury.io/py/iv.svg)](https://badge.fury.io/py/iv)
 
 `iv` is a utility for viewing images in the terminal using iTerm2's [image display capability](https://www.iterm2.com/documentation-images.html). It's useful for dealing with images on a remote server, for example with large image processing tasks.
 
