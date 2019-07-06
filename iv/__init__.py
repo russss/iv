@@ -1,6 +1,7 @@
 import click
 from imgcat import imgcat
 from PIL import Image, ImageDraw, ImageFont
+import subprocess
 import multiprocessing
 from multiprocessing.dummy import Pool as ThreadPool
 import io
@@ -13,6 +14,7 @@ FONTS = [
     "Arial.ttf",
 ]
 
+PIXELS_PER_LINE = 24
 
 @click.command()
 @click.version_option()
@@ -39,20 +41,27 @@ def main(filename, size):
        The IV_SIZE environment variable can be used to set the output image size
        instead of the -s/--size option.
     """
+    tty_size = get_tty_size()
     if len(filename) == 1:
-        imgcat(read_image(filename[0], size))
+        size = min(tty_size[1] * PIXELS_PER_LINE, size)
+        draw_single(filename[0], size)
     else:
-        imgcat(draw_multi(filename, size))
+        draw_multi(filename, tty_size[1] * PIXELS_PER_LINE)
+
+
+def draw_single(path, size):
+    im = read_image(path, size)
+    imgcat(save_image(im), height=im.size[1] // PIXELS_PER_LINE)
 
 
 def draw_multi(paths, size):
     """ Draw multiple images into a single "contact sheet" style image, with filenames."""
-    min_image_size = 200
-    h_spacing = 10
-    v_spacing = 40
+    min_image_size = 500
+    h_spacing = 20
+    v_spacing = 60
 
     per_line = size // (min_image_size + h_spacing)
-    max_width = int(size / per_line - h_spacing * per_line)
+    max_width = int(size / per_line - h_spacing)
 
     images = read_images(paths, max_width)
 
@@ -72,7 +81,7 @@ def draw_multi(paths, size):
     )
 
     draw = ImageDraw.Draw(canvas)
-    font = load_font(16)
+    font = load_font(28)
 
     height = 0
     for row in range(0, len(row_heights)):
@@ -96,7 +105,7 @@ def draw_multi(paths, size):
             )
         height += row_heights[row] + v_spacing
 
-    return save_image(canvas, fmt="JPEG")
+    imgcat(save_image(canvas, fmt="JPEG"), height=canvas.size[1] // PIXELS_PER_LINE)
 
 
 def load_font(size):
@@ -134,3 +143,9 @@ def save_image(im, fmt=None):
         im.save(output, format=fmt)
         contents = output.getvalue()
     return contents
+
+
+def get_tty_size():
+    with open('/dev/tty') as tty:
+        rows, columns = subprocess.check_output(['stty', 'size'], stdin=tty).split()
+    return int(rows), int(columns)
