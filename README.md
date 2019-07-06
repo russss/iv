@@ -18,6 +18,11 @@ of images with filenames:
 
 	$ pip3 install iv
 
+If `iv` can't find any suitable TrueType fonts on your system it'll use
+an ugly default bitmap font. To get some nicer fonts on Linux, install
+the Open Sans or msttcorefonts collections (`fonts-open-sans` or
+`ttf-mscorefonts-installer` packages on Debian-like distributions).
+
 ## Usage
 ```
 Usage: iv [OPTIONS] FILENAME...
