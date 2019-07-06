@@ -6,13 +6,13 @@
 When displaying single images, `iv` will resize them to speed up
 transfer over an SSH connection:
 
-![iv displaying a single image](https://github.com/russss/iv/blob/master/images/single.png)
+![iv displaying a single image](https://github.com/russss/iv/raw/master/images/single.png)
 
 When displaying multiple images, `iv` will produce a "contact sheet"
 of images with filenames. These images are decoded and resized in
 parallel:
 
-![iv displaying multiple images](https://github.com/russss/iv/blob/master/images/multi.png)
+![iv displaying multiple images](https://github.com/russss/iv/raw/master/images/multi.png)
 
 ## Installation
 
