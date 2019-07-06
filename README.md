@@ -52,4 +52,5 @@ Options:
 
 iTerm2 may refuse to display extremely large images, and replace them with a
 retro "broken image" icon. You can always right-click and "Open image"
-to view the image with an external viewer.
+to view the image with an external viewer. `iv` will ask for confirmation if
+the image it's about to display is taller than 500 console lines.
