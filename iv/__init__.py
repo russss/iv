@@ -1,7 +1,7 @@
 import click
+import shutil
 from imgcat import imgcat
 from PIL import Image, ImageDraw, ImageFont
-import subprocess
 import multiprocessing
 from multiprocessing.dummy import Pool as ThreadPool
 import io
@@ -14,7 +14,7 @@ FONTS = [
     "Arial.ttf",
 ]
 
-PIXELS_PER_LINE = 24
+PIXELS_PER_LINE = 12
 
 @click.command()
 @click.version_option()
@@ -41,12 +41,12 @@ def main(filename, size):
        The IV_SIZE environment variable can be used to set the output image size
        instead of the -s/--size option.
     """
-    tty_size = get_tty_size()
+    tty_size = shutil.get_terminal_size((80, 20))
     if len(filename) == 1:
-        size = min(tty_size[1] * PIXELS_PER_LINE, size)
+        size = min(tty_size.columns * PIXELS_PER_LINE, size)
         draw_single(filename[0], size)
     else:
-        draw_multi(filename, tty_size[1] * PIXELS_PER_LINE)
+        draw_multi(filename, tty_size.columns * PIXELS_PER_LINE)
 
 
 def draw_single(path, size):
@@ -56,9 +56,9 @@ def draw_single(path, size):
 
 def draw_multi(paths, size):
     """ Draw multiple images into a single "contact sheet" style image, with filenames."""
-    min_image_size = 500
+    min_image_size = 250
     h_spacing = 20
-    v_spacing = 60
+    v_spacing = 40
 
     per_line = size // (min_image_size + h_spacing)
     max_width = int(size / per_line - h_spacing)
@@ -81,7 +81,7 @@ def draw_multi(paths, size):
     )
 
     draw = ImageDraw.Draw(canvas)
-    font = load_font(28)
+    font = load_font(18)
 
     height = 0
     for row in range(0, len(row_heights)):
@@ -143,9 +143,3 @@ def save_image(im, fmt=None):
         im.save(output, format=fmt)
         contents = output.getvalue()
     return contents
-
-
-def get_tty_size():
-    with open('/dev/tty') as tty:
-        rows, columns = subprocess.check_output(['stty', 'size'], stdin=tty).split()
-    return int(rows), int(columns)
