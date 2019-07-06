@@ -50,10 +50,6 @@ Options:
 ```
 ## Limitations
 
-iTerm2 has some image resizing logic which means that increasing the displayed
-width may actually decrease the size of the image. This seems to be partly
-dependent on terminal dimensions.
-
-iTerm2 may refuse to display extremely large images, and replace them with an
-extremely retro "broken image" icon. You can always right-click and "Open image"
+iTerm2 may refuse to display extremely large images, and replace them with a
+retro "broken image" icon. You can always right-click and "Open image"
 to view the image with an external viewer.
