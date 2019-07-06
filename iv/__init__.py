@@ -16,6 +16,7 @@ FONTS = [
 
 PIXELS_PER_LINE = 12
 
+
 @click.command()
 @click.version_option()
 @click.option(
@@ -71,14 +72,17 @@ def draw_multi(paths, size):
             max(im.height for im in images[col_start : col_start + per_line])
         )
 
-    canvas = Image.new(
-        "RGB",
-        (
-            per_line * (max_width + h_spacing) - h_spacing,
-            sum(row_heights) + len(row_heights) * v_spacing,
-        ),
-        color=(255, 255, 255),
+    canvas_size = (
+        per_line * (max_width + h_spacing) - h_spacing,
+        sum(row_heights) + len(row_heights) * v_spacing,
     )
+    if canvas_size[1] > 500 * PIXELS_PER_LINE:
+        click.confirm(
+            "About to display an image taller than 500 lines - iTerm2 may not like this. Continue?",
+            abort=True,
+        )
+
+    canvas = Image.new("RGB", canvas_size, color=(255, 255, 255))
 
     draw = ImageDraw.Draw(canvas)
     font = load_font(18)
@@ -90,8 +94,10 @@ def draw_multi(paths, size):
             if im_offset >= len(images):
                 break
             im = images[im_offset]
+
             im_pos = (col * (max_width + h_spacing), height)
             canvas.paste(im, box=im_pos)
+
             font_size = font.getsize(im.filename)
             if font_size[0] > max_width:
                 # Don't draw if it'll overlap

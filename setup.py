@@ -9,7 +9,7 @@ with open("README.md") as f:
 
 setup(
     name="iv",
-    version="1.0.4",
+    version="1.0.5",
     description="Flexible terminal image viewer for iTerm2",
     long_description=long_description,
     long_description_content_type="text/markdown",
