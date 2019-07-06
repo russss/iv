@@ -8,7 +8,8 @@ transfer over an SSH connection:
 ![iv displaying a single image](./images/single.png)
 
 When displaying multiple images, `iv` will produce a "contact sheet"
-of images with filenames:
+of images with filenames. These images are decoded and resized in
+parallel:
 
 ![iv displaying multiple images](./images/multi.png)
 
